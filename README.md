@@ -1,3 +1,150 @@
+# 4월 8일 (수)
+
+### 조건부 렌더링
+
+- 컴포넌트는 조건에 따라 다른 항목을 표시해야 하는 경우가 많습니다.
+- React는 If문, 삼항 연산자와 같은 자바스크입트 문법을 사용하여 조건부로 JSX를 랜더링할 수 있습니다.
+
+## [ 실습 ]
+
+```jsx
+import PackingList from "./PackingList";
+
+export default function Profile() {
+  return (
+    <>
+      <PackingList />
+    </>
+  );
+}
+```
+
+App.jsx
+
+```jsx
+export default function Items({ name, isPacked }) {
+  if (isPacked) {
+    return <li>{name}✅</li>;
+  }
+  return <li>{name}</li>;
+}
+```
+
+Items.jsx
+
+```jsx
+import Items from "./Items";
+
+export default function PackingList() {
+  return (
+    <>
+      <section>
+        <h1>여행 짐 리스트</h1>
+        <ul>
+          <Items name="여분 옷" />
+          <Items name="노트북" />
+          <Items name="컵라면" isPacked={true} />
+        </ul>
+      </section>
+    </>
+  );
+}
+```
+
+PackingList.jsx
+
+### 논리 연산자 AND(&&) 사용하기
+
+if문이나 삼항 연산자를 사용하는 방법외에 일반적으로 사용하는 또 다른 방법은 JavaScript 논리 연산자 AND('&&')를 사용하는 것입니다.
+
+```jsx
+export default function Items({ name, isPacked }) {
+  return (
+    <li>
+      {name}
+      {isPacked && " ✅"}
+    </li>
+  );
+}
+```
+
+Items.jsx
+
+- && 윈쪽에 숫자를 두면 안 됩니다.
+- JavaScript는 조건을 테스트하기 위해 표현식 왼쪽을 자동으로 부울(bool)로 변환합니다.
+
+### 변수에 존건부로 JSX를 할당하기
+
+- let으로 정의된 변수는 재할당할 수 있으므로 표시할 기본 내용인 name을 먼저 대입합니다.
+
+```jsx
+let itemContent = name;
+```
+
+- 다음으로 if 문을 사용하여 isPacked가 true인 경우 JSX 표현식을 itemContent에 다시 할당합니다.
+
+```jsx
+if (isPacked) {
+  itemContent = name + " ✅";
+}
+```
+
+- return문의 JSX 트리에 중괄호를 사용하고, 위의 if문에서 계산된 변수 itemContent를 JSX 내부에 중첩하여 포함시킵니다.
+
+```jsx
+<li>{itemContent}</li>
+```
+
+```jsx
+const heroes = [
+  "스파이더맨: 피터 파커",
+  "아이언맨: 토니 스타크",
+  "베트맨: 브루스 웨인",
+  "슈퍼맨: 클라크 켄트",
+  "헐크: 로버트 브루스 배너",
+];
+
+export default function MovieHeroes() {
+  const listHeroes = heroes.map((hero) => <li key={hero}>{hero}</li>);
+
+  return (
+    <section>
+      <h1>영화 속 영웅들</h1>
+      <ul>{listHeroes}</ul>
+    </section>
+  );
+}
+```
+
+MovieHeroes.jsx
+
+```jsx
+import MovieHeroes from "./MovieHeroes";
+
+export default function Profile() {
+  return (
+    <>
+      <MovieHeroes />
+    </>
+  );
+}
+```
+
+App.jsx
+
+- 경고 메세지
+
+```
+Each child in a list should have a unique "key" prop.
+```
+
+### 리스트 랜더링
+
+- 컴포넌트에서 여러 개의 데이터로 같은 햘식으로 출력해야 하는 경우가 있습니다.
+- 이럴 떄는 JavaScript의 배열관련 함수를 사용해서, 배열을 컴포넌트의 기능에 맞게 랜더리할 수 있습니다.
+
+# 4월 1일 (수)
+
 # 3월 25일 (수)
 
 ### 차세대 자바스크립트 빌드 도구 (Oxc & SWC)
