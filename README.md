@@ -1,3 +1,214 @@
+# 4월 15일 (수)
+
+## [ 실습1 ]
+
+```jsx
+export const heroes = [
+  {
+    id: 0,
+    casting: "스파이더맨",
+    name: "피터 파커",
+  },
+  {
+    id: 1,
+    casting: "아이언맨",
+    name: "토니 스타크",
+  },
+  {
+    id: 2,
+    casting: "배트맨",
+    name: "브루스 웨인",
+  },
+  {
+    id: 3,
+    casting: "슈퍼맨",
+    name: "클라크 켄트",
+  },
+  {
+    id: 4,
+    casting: "헐크",
+    name: "브루스 배너",
+  },
+];
+```
+
+HeroesData
+
+## 화살표 함수(Arrow Function)에 대하여
+
+### 묵시적 반환 (Implicit Return)
+
+화살표 함수는 `=>` 바로 뒤에 식이 오는 경우, 별도의 `return` 키워드 없이도 그 값을 **묵시적으로 반환**하므로 작성할 필요가 없습니다.
+
+```jsx
+const listItems = chemists.map(
+  (person) => <li>...</li>, // 묵시적 반환
+);
+```
+
+### 명시적 반환 (Explicit Return)
+
+그러나 => 뒤에 **{ } (중괄호)**가 오는 경우에는 return을 명시적으로 작성해야 합니다.
+
+```jsx
+const listItems = chemists.map((person) => {
+  // 중괄호 사용
+  return <li>...</li>; // 명시적 반환
+});
+```
+
+- Block Body: => { 처럼 중괄호를 사용하는 화살표 함수는 **"block body"**를 가지고 있다고 말합니다.
+- 유연성: 이 형식을 사용하면 함수 내부에서 한 줄 이상의 복잡한 코드를 작성할 수 있습니다.
+- 주의사항: 중괄호를 열었다면 반드시 return 문을 작성해야 합니다.
+- 결과: return 문을 작성하지 않으면 아무것도 반환되지 않습니다 (undefined).
+
+- 경고 메세지
+
+```
+Each child in a list should have a unique "key" prop.
+```
+
+### 리스트 랜더링
+
+- 컴포넌트에서 여러 개의 데이터로 같은 햘식으로 출력해야 하는 경우가 있습니다.
+- 이럴 떄는 JavaScript의 배열관련 함수를 사용해서, 배열을 컴포넌트의 기능에 맞게 랜더리할 수 있습니다.
+
+## Key prop을 사용하는 이유
+
+React에서 리스트를 렌더링할 때 다음과 같은 경고를 마주할 수 있습니다.
+
+> **Warning:** Each child in a list should have a unique "key" prop.
+
+### 경고가 발생하는 이유
+
+이 경고는 목록(배열)의 각 자식 요소가 고유한 **'key' prop**을 가져야 하는데, 설정되지 않아서 발생합니다.
+
+- 배열의 각 항목은 다른 항목들과 명확히 구분되는 **고유한 문자열 혹은 숫자**를 key로 지정해야 합니다.
+- 이것을 **key prop**이라고 합니다.
+- 데이터 설계 시 고려사항: HeroesData 컴포넌트의 데이터에 id 값을 미리 포함시킨 이유는 바로 이 key prop으로 사용하기 위해서입니다.
+- 핵심 규칙: map() 함수를 사용할 때 내부의 JSX 엘리먼트에는 반드시 key prop이 필요합니다.
+
+# # 프래그먼트(Fragment)와 key prop
+
+### 여러 개의 태그를 반환해야 할 때
+
+#### 각 항목이 하나가 아닌 **여러 개의 DOM 노드**를 렌더링해야 하는 경우(반환해야 하는 태그가 여러 개일 경우) 어떻게 처리해야 할까요?
+
+- 보통 **프래그먼트(`<>...</>`)** 구문을 사용하거나, `<div>` 태그 등으로 묶어서 하나로 노드로 만들어 반환해야 합니다.
+
+## 컴포넌트를 순수하게 유지하기
+
+- **순수 함수란 무엇인가?**
+  - 같은 입력 값을 넣으면 항상 같은 결과를 반환하는 함수를 말합니다.
+  - 외부의 상태를 변경하지 않는 즉, 사이드 이펙트(side effect)가 없는 함수를 의미합니다.
+
+- **다음 두 함수를 비교해 보세요. 어떤 것이 순수함수 일까요?**
+
+```jsx
+function add(a, b) {
+  return a + b;
+
+```
+
+```jsx
+let count = 0;
+
+function increase() {
+  count++;
+}
+```
+
+```jsx
+// kiosk.jsx
+import OrderUp from "./OrderUp";
+
+export default function Kiosk() {
+  return (
+    <section>
+      <h2>치즈버거 세트 메뉴를 주문하세요.</h2>
+      <p>일반 세트</p>
+      <OrderUp order={1} />
+      <p>패밀리 세트</p>
+      <OrderUp order={2} />
+      <p>이용해 주셔서 감사합니다.</p>
+    </section>
+  );
+}
+```
+
+```jsx
+// OderUp.jsx
+export default function OrderUp({ order }) {
+  return (
+    <section>
+      <p>
+        치즈버거{order}개/콜라{order}개 + (이벤트)프렌치 프라이{2 * order}개
+      </p>
+    </section>
+  );
+}
+```
+
+## 사이드 이펙트: 의도하지(않은) 결과
+
+```jsx
+/* eslint-disable*/
+let guest s= 0;
+
+function Cup() {
+  // 이미 존재했던 변수를 변경하고 있습니다!
+  guest = guest + 1;
+  return <h2>Tea cup for guest #{guest}</h2>;
+}
+
+export default function TeaSet() {
+  return (
+    <>
+      <Cup />
+      <Cup />
+      <Cup />
+    </>
+  );
+```
+
+## 지역 변경(local mutation)
+
+- 잘못된 예제의 문제점은 컴포넌트가 **외부에 있는 기존 변수**를 렌더링 중에 변경했다는 것입니다.
+- 이런 사이드 이펙트를 **"변경(Mutation)"**이라고 부르기도 합니다. Mutation은 돌연변이라는 뜻도 가지고 있습니다.
+- 순수 함수는 **함수 스코프 외부의 변수**나 호출 전에 생성된 객체를 변경하지 않습니다.
+- 그러나, **렌더링하는 동안에 생성된 변수와 객체**를 변경하는 것은 전혀 문제가 되지 않습니다.
+
+## [ 실습 ]
+
+```jsx
+function Cup({ guest }) {
+  return <h2>Tea cup for guest #{guest}</h2>;
+}
+
+export default function TeaGathering() {
+  const cups = [];
+  for (let i = 1; i <= 12; i++) {
+    cups.push(<Cup key={i} guest={i} />);
+  }
+  return cups;
+}
+```
+
+## UI를 트리 구조로 이해하기 - Render 트리
+
+- React를 비롯한 많은 UI 라이브러리는 UI를 **트리의 형태**로 모델링합니다.
+- 애플리케이션을 트리로 생각하면 **컴포넌트 간의 관계**를 이해하는 데 도움이 됩니다.
+- 또한 향후 성능이나 상태 관리와 같은 개념을 파악하는 데도 많은 도움이 됩니다.
+
+---
+
+### 트리 구조의 활용
+
+트리는 요소 사이의 관계 모델이며, UI는 이 트리 구조를 사용하여 표현됩니다.
+
+- **브라우저**: HTML(DOM)과 CSS(CSSOM)을 모델링하기 위해 트리 구조를 사용합니다.
+- **모바일 플랫폼**: 뷰(View)의 계층 구조를 나타내는 데 트리를 사용합니다.
+
 # 4월 8일 (수)
 
 ### 조건부 렌더링
@@ -132,18 +343,109 @@ export default function Profile() {
 
 App.jsx
 
-- 경고 메세지
-
-```
-Each child in a list should have a unique "key" prop.
-```
-
-### 리스트 랜더링
-
-- 컴포넌트에서 여러 개의 데이터로 같은 햘식으로 출력해야 하는 경우가 있습니다.
-- 이럴 떄는 JavaScript의 배열관련 함수를 사용해서, 배열을 컴포넌트의 기능에 맞게 랜더리할 수 있습니다.
-
 # 4월 1일 (수)
+
+### Props (Properties) 이해하기
+
+-**Props란 무엇인가?**
+
+- 부모 컴포넌트가 자식 컴포넌트에 전달하는 데이터입니다. (마치 함수의 '인자'와 같은 역할)
+
+- Props는 **읽기 전용(Read-only)**이며, 자식 컴포넌트 내부에서 수정할 수 없습니다.
+
+-**Props 전달하고 사용하기 [ 실습 ]**
+
+```jsx
+// 부모 컴포넌트 (App.jsx)
+import Welcome from "./Welcome";
+
+export default function App() {
+  return (
+    <>
+      <Welcome name="이동교" color="blue" />
+      <Welcome name="리액트" color="red" />
+    </>
+  );
+}
+```
+
+```jsx
+// 자식 컴포넌트 (Welcome.jsx)
+export default function Welcome(props) {
+  return <h1 style={{ color: props.color }}>안녕하세요, {props.name}님!</h1>;
+}
+```
+
+-**2. Props 구조 분해 할당 (Destructuring)**
+
+- props.name 처럼 매번 props를 붙이지 않고, 중괄호 { }를 사용해 필요한 값만 바로 꺼내 쓸 수 있습니다.
+
+```jsx
+export default function Welcome({ name, color }) {
+  return <h1 style={{ color: color }}>안녕하세요, {name}님!</h1>;
+}
+```
+
+- 기본값 설정 (Default Props): 부모가 값을 주지 않았을 때 사용할 기본값을 지정할 수 있습니다.
+
+```jsx
+export default function Welcome({ name = "손님" }) {
+  return <h1>환영합니다, {name}님!</h1>;
+}
+```
+
+-**3. JSX에서 자바스크립트 사용하기 (중괄호 { })**
+
+- JSX 내부에서 자바스크립트 변수나 표현식을 사용하려면 **중괄호 { }**로 감싸야 합니다.
+
+-**[ 실습 ] 자바스크립트 객체와 스타일 전달**
+
+```jsx
+const user = {
+  name: "Lee Dong-gyo",
+  imageUrl: "https://example.com/photo.jpg",
+  imageSize: 90,
+};
+
+export default function Profile() {
+  return (
+    <>
+      <h1>{user.name}</h1>
+      <img
+        className="avatar"
+        src={user.imageUrl}
+        alt={"Photo of " + user.name}
+        style={{
+          width: user.imageSize,
+          height: user.imageSize,
+          borderRadius: "50%",
+        }}
+      />
+    </>
+  );
+}
+```
+
+- 주의사항: style={{ ... }} 에서 바깥쪽 중괄호는 JSX 표현식을 위한 것이고, 안쪽 중괄호는 자바스크립트 객체임을 나타냅니다.
+
+-**4. 자식 컴포넌트를 Props로 전달하기 (children)**
+
+- 태그와 태그 사이에 넣은 내용은 children이라는 특별한 prop으로 전달됩니다.
+
+```jsx
+function Card({ children }) {
+  return <div className="card-container">{children}</div>;
+}
+
+export default function App() {
+  return (
+    <Card>
+      <h1>카드 제목</h1>
+      <p>카드 내용입니다.</p>
+    </Card>
+  );
+}
+```
 
 # 3월 25일 (수)
 
